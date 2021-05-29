@@ -2,38 +2,50 @@ import pygame
 import random
 import pygame_menu
 
+
+
 pygame.init()
+
+#VARIÁVEIS GLOBAIS
 menuLigado = False
 white = (255, 255, 255)
 WIDTH = 850
 HEIGHT = 600
-FONT = pygame.font.SysFont("Sans", 20)
+FONT = pygame.font.SysFont("comicsansms", 50)
 TEXT_COLOR = (0, 0, 0)
 surface = pygame.display.set_mode((WIDTH, HEIGHT))
 level = 10
+poluicao = 0
+levelPoluicao = 10
 
+BACK = 'img/bg.png'
 menu = pygame_menu.Menu(HEIGHT, WIDTH, 'Lixeira Ecológica Game', theme=pygame_menu.themes.THEME_DARK)
 
+#FUNÇÃO PARA TRATAR DIFICULDADE
 def set_difficulty(value, difficulty):
     global level
+    global levelPoluicao
     print(difficulty)
     if difficulty == 1:
         level = 10
+        levelPoluicao = 10
     elif difficulty == 2:
         level = 20
+        levelPoluicao = 5
     elif difficulty == 3:
         level = 30
+        levelPoluicao = 3.333
     else:
         level = 0
     pass
 
-
-
+#FUNÇÃO PARA INICIAR JOGO
 def start_the_game():
     running = True
     display_surface = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption('Nome do Jogo')
-    bg = pygame.image.load("img/bg.png")
+    bg = pygame.image.load("img/bg.png").convert(24)
+    bg.set_alpha(50)
 
     amarela = pygame.image.load('img/lxamarela.png')
     azul = pygame.image.load('img/lxazul.png')
@@ -42,11 +54,13 @@ def start_the_game():
     painel = pygame.image.load('img/painel.png')
 
 
+
+
     contador = 0
     ponto = 0
     objetos = ['Copos', 'Sacolas', 'Frascos', 'Potes', 'Tampinhas', 'Tubos de PVC',
-               'Embalagens PET', 'Jornais', 'revistas', 'sulfite', 'rascunhos', 'folhas de caderno', 'formulários',
-               'caixas de papelão', 'aparas de papel', 'envelopes', 'cartazes', 'panfletos', 'Tampinhas de garrafas',
+               'Embalagens PET', 'Jornais', 'revistas', 'sulfite', 'rascunhos', 'folhas de caderno', 'formularios',
+               'caixas de papelao', 'aparas de papel', 'envelopes', 'cartazes', 'panfletos', 'Tampinhas de garrafas',
                'lacres de latinhas', 'latas', 'ferragens', 'arames', 'chapas', 'canos', 'pregos', 'parafusos', 'porcas',
                'ferramentas', 'Garrafas', 'potes de conserva', 'Embalagens', 'Frascos', 'Vazios de remédios', 'Copos']
 
@@ -70,52 +84,64 @@ def start_the_game():
     # Embaralha Lista de Objetos
     random.shuffle(objetos)
 
+    taCerto = True
+
     while running:
         current_time = int(pygame.time.get_ticks() / 1000)
         display_surface.blit(bg, (0, 0))
 
         painel_imagem = display_surface.blit(painel, (0, 0))
 
-
         lixeiraVermelha = display_surface.blit(vermelha, (650, 391))
         lixeiraAmarela = display_surface.blit(amarela, (50, 385))
         lixeiraAzul = display_surface.blit(azul, (250, 390))
         lixeiraVerde = display_surface.blit(verde, (450, 396))
 
+        global poluicao
+
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
-
                 if lixeiraAmarela.collidepoint(pygame.mouse.get_pos()):
-                    contador = contador + 1
                     if objetos[contador] in amarelo_metal:
-
+                        display_surface.blit(pygame.image.load('img/correct.png'), (200, 180))
                         ponto = ponto + 1
-                        display_surface.blit(pygame.image.load('img/correct.png'), (170, 180))
                     else:
-                        display_surface.blit(pygame.image.load('img/incorrect.png'), (170, 180))
+                        display_surface.blit(pygame.image.load('img/incorrect.png'), (200, 180))
+                        poluicao = poluicao + levelPoluicao
+                    contador = contador + 1
                 if lixeiraAzul.collidepoint(pygame.mouse.get_pos()):
-                    contador = contador + 1
+
                     if objetos[contador] in azul_papel:
+                        display_surface.blit(pygame.image.load('img/correct.png'), (200, 180))
                         ponto = ponto + 1
-                        display_surface.blit(pygame.image.load('img/correct.png'), (170, 180))
                     else:
-                        display_surface.blit(pygame.image.load('img/incorrect.png'), (170, 180))
+                        display_surface.blit(pygame.image.load('img/incorrect.png'), (200, 180))
+                        poluicao = poluicao + levelPoluicao
+                    contador = contador + 1
                 if lixeiraVerde.collidepoint(pygame.mouse.get_pos()):
-                    contador = contador + 1
+
                     if objetos[contador] in verde_vidro:
+                        display_surface.blit(pygame.image.load('img/correct.png'), (200, 180))
                         ponto = ponto + 1
-                        display_surface.blit(pygame.image.load('img/correct.png'), (170, 180))
                     else:
-                        display_surface.blit(pygame.image.load('img/incorrect.png'), (170, 180))
-                if lixeiraVermelha.collidepoint(pygame.mouse.get_pos()):
+                        display_surface.blit(pygame.image.load('img/incorrect.png'), (200, 180))
+                        poluicao = poluicao + levelPoluicao
                     contador = contador + 1
+                if lixeiraVermelha.collidepoint(pygame.mouse.get_pos()):
+
                     if objetos[contador] in vermelho_plastico:
+                        display_surface.blit(pygame.image.load('img/correct.png'), (200, 180))
                         ponto = ponto + 1
-                        display_surface.blit(pygame.image.load('img/correct.png'), (170, 180))
                     else:
-                        display_surface.blit(pygame.image.load('img/incorrect.png'), (170, 180))
+                        display_surface.blit(pygame.image.load('img/incorrect.png'), (200, 180))
+                        poluicao = poluicao + levelPoluicao
+                    contador = contador + 1
             if contador == level:
                 running = False
+                poluicao = 0
+
+
+
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
@@ -130,16 +156,16 @@ def start_the_game():
         display_surface.blit(jogadas, (420, 10))
         display_surface.blit(tempo, (130, 8))
 
-        objetoColeta = font.render(str(objetos[contador]).upper(), True, (36, 36, 36))
+        objetoColeta = font.render(str(objetos[contador]).upper(), 'True', (36, 36, 36))
 
-        display_surface.blit(objetoColeta, (330, 225))
-
+        display_surface.blit(objetoColeta, (320, 225))
+        pygame.gfxdraw.box(surface, pygame.Rect(0, 43, WIDTH, 557), (0, 0, 0, poluicao))
         # Draws the surface object to the screen.
         pygame.display.update()
 
     pass
 
-
+#MENU PRINCIPAL
 menu.add.text_input('Nome: ', default='John Doe')
 menu.add.selector('Dificuldade: ', [(' Fácil  ', 1), ('Médio', 2), ('Difícil ', 3)], onchange=set_difficulty)
 menu.add.button('Jogar', start_the_game)

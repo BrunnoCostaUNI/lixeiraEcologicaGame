@@ -41,13 +41,54 @@ def set_difficulty(value, difficulty):
         level = 0
     pass
 
+#INSTRUÇÃO COLETA
+def start_manual():
+    manual_running = True
+    bg = pygame.image.load("img/bg.png").convert(24)
+    display_surface.blit(bg, (0, 0))
+
+
+
+    while manual_running:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == 109:
+                    manual_running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                manual_running =False
+
+
+        # Display scores:
+        font = pygame.font.Font(None, 40)
+
+        titulo_cores = font.render('Código de Cores - Coleta Seletiva', True, (0, 0, 0))
+        text_azul = font.render('Azul: papel/papelão', True, (0, 0, 0))
+        text_vermelho = font.render('Vermelho: plástico', True, (0, 0, 0))
+        text_verde = font.render('Verde: vidro', True, (0, 0, 0))
+        text_amarelo = font.render('Amarelo: metal', True, (0, 0, 0))
+        voltar_menu = font.render('Aperte [m] ou clique com o mouse para voltar ao menu.', True, (0, 0, 0))
+
+
+        display_surface.blit(titulo_cores, (200, 10))
+        display_surface.blit(text_azul, (300, 100))
+        display_surface.blit(text_vermelho, (300,170))
+        display_surface.blit(text_verde, (300, 240))
+        display_surface.blit(text_amarelo, (300, 310))
+        display_surface.blit(voltar_menu, (40, 500))
+
+
+        # Draws the surface object to the screen.
+        pygame.display.update()
+
+    pass
+
 
 #FUNÇÃO PARA INICIAR JOGO
 def start_the_game():
     running = True
     placar_show = False
 
-    pygame.display.set_caption('Nome do Jogo')
+    pygame.display.set_caption('Lixeira Ecológica Game')
     bg = pygame.image.load("img/bg.png").convert(24)
     bg.set_alpha(50)
 
@@ -193,6 +234,7 @@ def start_the_game():
 #MENU PRINCIPAL
 menu.add.text_input('Nome: ', default='John Doe')
 menu.add.selector('Dificuldade: ', [(' Fácil  ', 1), ('Médio', 2), ('Difícil ', 3)], onchange=set_difficulty)
+menu.add.button('Manual', start_manual)
 menu.add.button('Jogar', start_the_game)
 menu.add.button('Sair', pygame_menu.events.EXIT)
 
